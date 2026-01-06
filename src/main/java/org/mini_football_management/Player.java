@@ -88,7 +88,6 @@ public class Player {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", position=" + position +
-                ", team=" + team +
                 '}';
     }
 }
