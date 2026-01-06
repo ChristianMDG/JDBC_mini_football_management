@@ -121,9 +121,9 @@ public class DataRetriever {
         String insertPlayerQuery = "UPDATE player SET id_team = ? WHERE id = ?";
 
         try (Connection connection = dbConnection.getConnection()) {
-            connection.setAutoCommit(false); // transaction atomique
+            connection.setAutoCommit(false);
 
-            // 🔹 Vérifier si l'équipe existe par id
+
             boolean teamExists;
             try (PreparedStatement verifyTeamByIdStmt = connection.prepareStatement(verifyTeamByIdQuery)) {
                 verifyTeamByIdStmt.setInt(1, teamToSave.getId());
@@ -132,7 +132,7 @@ public class DataRetriever {
                 }
             }
 
-            // 🔹 Vérifier s’il y a déjà une équipe avec le même nom (mais pas le même id)
+
             try (PreparedStatement verifyTeamByNameStmt = connection.prepareStatement(verifyTeamByNameQuery)) {
                 verifyTeamByNameStmt.setString(1, teamToSave.getName());
                 verifyTeamByNameStmt.setInt(2, teamToSave.getId());
@@ -143,7 +143,7 @@ public class DataRetriever {
                 }
             }
 
-            // 🔹 INSERT ou UPDATE équipe
+
             if (teamExists) {
                 try (PreparedStatement updateTeamStmt = connection.prepareStatement(updateTeamQuery)) {
                     updateTeamStmt.setString(1, teamToSave.getName());
@@ -160,13 +160,13 @@ public class DataRetriever {
                 }
             }
 
-            // 🔹 Dissocier les joueurs existants
+
             try (PreparedStatement deletePlayerStmt = connection.prepareStatement(deletePlayerQuery)) {
                 deletePlayerStmt.setInt(1, teamToSave.getId());
                 deletePlayerStmt.executeUpdate();
             }
 
-            // 🔹 Associer les joueurs de la liste
+
             if (teamToSave.getPlayers() != null) {
                 try (PreparedStatement insertPlayerStmt = connection.prepareStatement(insertPlayerQuery)) {
                     for (Player player : teamToSave.getPlayers()) {
@@ -174,11 +174,11 @@ public class DataRetriever {
                         insertPlayerStmt.setInt(2, player.getId());
                         insertPlayerStmt.addBatch();
                     }
-                    insertPlayerStmt.executeBatch(); // exécuter le batch pour optimiser
+                    insertPlayerStmt.executeBatch();
                 }
             }
 
-            // 🔹 Commit transaction
+
             connection.commit();
             System.out.println("Équipe sauvegardée avec succès : " + teamToSave.getName());
 
