@@ -7,14 +7,19 @@ import java.util.Objects;
 public class Team {
     private int id;
     private String name;
-    private Continent ContinentEnum;
+    private  ContinentEnum continent;
     private List<Player> players;
-
-    public Team(int id, String name, Continent ContinentEnum) {
+    public Team() {}
+    public Team(int id, String name, ContinentEnum continent) {
         this.id = id;
         this.name = name;
-        this.ContinentEnum = ContinentEnum;
-        this.players = new ArrayList<>();
+        this.continent = continent;
+    }
+    public Team(int id, String name, ContinentEnum continent, List<Player> players) {
+        this.id = id;
+        this.name = name;
+        this.continent = continent;
+        this.players = players;
     }
 
     public int getId() {
@@ -33,12 +38,12 @@ public class Team {
         this.name = name;
     }
 
-    public Continent getContinentEnum() {
-        return ContinentEnum;
+    public ContinentEnum getContinent() {
+        return continent;
     }
 
-    public void setContinentEnum(Continent continentEnum) {
-        ContinentEnum = continentEnum;
+    public void setContinent(ContinentEnum continent) {
+        this.continent = continent;
     }
 
     public List<Player> getPlayers() {
@@ -49,19 +54,20 @@ public class Team {
         this.players = players;
     }
 
-    public Integer getPlayersCount() {
+    public Integer getPlayerCount() {
         return players.size();
     }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Team team = (Team) o;
-        return id == team.id && Objects.equals(name, team.name) && ContinentEnum == team.ContinentEnum && Objects.equals(players, team.players);
+        return id == team.id && Objects.equals(name, team.name) && continent == team.continent && Objects.equals(players, team.players);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, ContinentEnum, players);
+        return Objects.hash(id, name, continent, players);
     }
 
     @Override
@@ -69,7 +75,7 @@ public class Team {
         return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", ContinentEnum=" + ContinentEnum +
+                ", continent=" + continent +
                 ", players=" + players +
                 '}';
     }

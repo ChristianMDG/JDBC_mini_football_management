@@ -7,14 +7,21 @@ public class Player {
     private int id;
     private String name;
     private int age;
-    private Position PlayerPositionEnum;
+    private  PlayerPositionEnum position;
     private Team team;
 
-    public Player(int id, String name, int age, Position playerPositionEnum, Team team) {
+    public Player(){}
+    public Player(int id, String name, int age, PlayerPositionEnum position) {
         this.id = id;
         this.name = name;
         this.age = age;
-        PlayerPositionEnum = playerPositionEnum;
+        this.position = position;
+    }
+    public Player(int id, String name, int age, PlayerPositionEnum position, Team team) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.position = position;
         this.team = team;
     }
 
@@ -42,12 +49,12 @@ public class Player {
         this.age = age;
     }
 
-    public Position getPlayerPositionEnum() {
-        return PlayerPositionEnum;
+    public PlayerPositionEnum getPosition() {
+        return position;
     }
 
-    public void setPlayerPositionEnum(Position playerPositionEnum) {
-        PlayerPositionEnum = playerPositionEnum;
+    public void setPosition(PlayerPositionEnum position) {
+        this.position = position;
     }
 
     public Team getTeam() {
@@ -66,12 +73,12 @@ public class Player {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return id == player.id && age == player.age && Objects.equals(name, player.name) && Objects.equals(PlayerPositionEnum, player.PlayerPositionEnum) && Objects.equals(team, player.team);
+        return id == player.id && age == player.age && Objects.equals(name, player.name) && position == player.position && Objects.equals(team, player.team);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age, PlayerPositionEnum, team);
+        return Objects.hash(id, name, age, position, team);
     }
 
     @Override
@@ -80,7 +87,7 @@ public class Player {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                ", PlayerPositionEnum=" + PlayerPositionEnum +
+                ", position=" + position +
                 ", team=" + team +
                 '}';
     }
