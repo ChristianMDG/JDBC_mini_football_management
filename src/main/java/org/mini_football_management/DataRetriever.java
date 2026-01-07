@@ -14,7 +14,7 @@ public class DataRetriever {
         Team team = null;
         List<Player> players = new ArrayList<>();
         String findTeamByIdQuery = """
-                select team.id as teamId, team.name as teamName, team.continent as continent , player.id as playerId, player.name as playerName,player.age as age,player.position as position from team
+                select team.id as team_id, team.name as team_name, team.continent as continent , player.id as player_id, player.name as player_name,player.age as age,player.position as position from team
                 left join player on team.id = player.id_team
                 where team.id = ?""";
 
@@ -25,16 +25,16 @@ public class DataRetriever {
             while (resultSet.next()) {
                 if (team == null) {
                     team = new Team();
-                    team.setId(resultSet.getInt("teamId"));
-                    team.setName(resultSet.getString("teamName"));
+                    team.setId(resultSet.getInt("team_id"));
+                    team.setName(resultSet.getString("team_name"));
                     team.setContinent(ContinentEnum.valueOf(resultSet.getString("continent")));
 
                     team.setPlayers(players);
                 }
-                if (resultSet.getInt("playerId") != 0) {
+                if (resultSet.getInt("player_id") != 0) {
                     Player player = new Player();
-                    player.setId(resultSet.getInt("playerId"));
-                    player.setName(resultSet.getString("playerName"));
+                    player.setId(resultSet.getInt("player_id"));
+                    player.setName(resultSet.getString("player_name"));
                     player.setAge(resultSet.getInt("age"));
                     player.setPosition(PlayerPositionEnum.valueOf(resultSet.getString("position")));
                     players.add(player);
@@ -49,7 +49,7 @@ public class DataRetriever {
         List<Player> players = new ArrayList<>();
         int offset = (page - 1) * size;
         String findPlayerQuery = """
-                select player.id as playerId, player.name as playerName, player.age as age , player.position as position , team.name as team , team.continent as continent\s
+                select player.id as player_id, player.name as player_name, player.age as age , player.position as position , team.name as team , team.continent as continent\s
                 from player left join team on player.id_team = team.id
                 limit ? offset ?
                 """;
@@ -60,10 +60,10 @@ public class DataRetriever {
             ResultSet resultSet = findPlayerStatement.executeQuery();
 
             while (resultSet.next()) {
-                if (resultSet.getInt("playerId") != 0) {
+                if (resultSet.getInt("player_id") != 0) {
                     Player player = new Player();
-                    player.setId(resultSet.getInt("playerId"));
-                    player.setName(resultSet.getString("playerName"));
+                    player.setId(resultSet.getInt("player_id"));
+                    player.setName(resultSet.getString("player_name"));
                     player.setAge(resultSet.getInt("age"));
                     player.setPosition(PlayerPositionEnum.valueOf(resultSet.getString("position")));
                     players.add(player);
@@ -126,7 +126,7 @@ public class DataRetriever {
             } catch (Exception e) {
                 connection.rollback();
                 throw new RuntimeException(
-                        "opération annulée : atomicité non respectée", e
+                        "opération annulée", e
                 );
             }
         }
@@ -157,7 +157,7 @@ public class DataRetriever {
                 stmt.setInt(2, teamToSave.getId());
                 if (stmt.executeQuery().next()) {
                     throw new RuntimeException(
-                            "une autre équipe existe déjà avec le nom : " + teamToSave.getName()
+                            "Already exist : " + teamToSave.getName()
                     );
                 }
             }
@@ -201,7 +201,7 @@ public class DataRetriever {
             return teamToSave;
 
         } catch (Exception e) {
-            throw new RuntimeException("échec de la sauvegarde de l'équipe", e);
+            throw new RuntimeException("saving error", e);
         }
     }
 
