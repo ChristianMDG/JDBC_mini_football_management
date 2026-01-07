@@ -58,6 +58,18 @@ public class Team {
         return players.size();
     }
 
+    public Integer getPlayersGoals(){
+
+            if (players== null|| players.isEmpty()) {
+                return 0;
+            }
+            int totalGoals = 0;
+
+            for (Player player : players) {
+                totalGoals += player.getGoalNb();
+            }
+        return totalGoals;
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -72,11 +84,12 @@ public class Team {
 
     @Override
     public String toString() {
-        return "Team{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", continent=" + continent +
-                ", players=" + players +
-                '}';
+        return "Team {\n" +
+                "  id=" + id + ",\n" +
+                "  name='" + name + "',\n" +
+                "  continent=" + continent + ",\n" +
+                "  players=" + players + ",\n" +
+                "}";
     }
+
 }

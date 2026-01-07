@@ -10,5 +10,6 @@ create table  if not exists Player (
     name varchar(50) ,
     age int,
     position enum_position,
+    goal_nb int,
     id_team int references team(id) on delete cascade
 );

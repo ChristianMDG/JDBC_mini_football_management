@@ -1,6 +1,7 @@
 package org.mini_football_management;
 
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,25 +36,44 @@ public class Main {
 //        System.out.println(dataRetriever.createPlayers(addPlayers));
 
 
-        System.out.println("\nTest h:");
-        List<Player> newPlayers = new ArrayList<>();
-        newPlayers.add(new Player(6, "Vini", 25, PlayerPositionEnum.STR, null));
-        newPlayers.add(new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null));
-        System.out.println(dataRetriever.createPlayers(newPlayers));
+//        System.out.println("\nTest h:");
+//        List<Player> newPlayers = new ArrayList<>();
+//        newPlayers.add(new Player(6, "Vini", 25, PlayerPositionEnum.STR, null));
+//        newPlayers.add(new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null));
+//        System.out.println(dataRetriever.createPlayers(newPlayers));
 
-//        System.out.println("\nTest i:");
+ //       System.out.println("\nTest i:");
 //        Team realDeMadrid = dataRetriever.findTeamById(1);
-//        Player vini = new Player(6, "Vini", 25, PlayerPositionEnum.STR, null);
+//        Player vini = new Player(6, "Vini", 25, PlayerPositionEnum.STR, 5);
 //        Player pedri = new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null);
 //        realDeMadrid.getPlayers().add(vini);
 //        realDeMadrid.getPlayers().add(pedri);
 //        Team savedTeam = dataRetriever.saveTeam(realDeMadrid);
 //        System.out.println("Team saved: " + savedTeam.getName() + " with " + savedTeam.getPlayers());
-//
+
 //
 //        System.out.println("\nTest j:");
 //        Team barca = dataRetriever.findTeamById(2);
 //        barca.setPlayers(new ArrayList<>());
 //        System.out.println(dataRetriever.saveTeam(barca));
+
+        System.out.println("******************** Test findTeamByID *******************\n");
+        Team team = dataRetriever.findTeamById(1);
+        System.out.println("Team retrieved:");
+        System.out.println(team);
+        System.out.print("Calculate players goals: ");
+        Integer goals = team.getPlayersGoals();
+        System.out.println(goals);
+
+        System.out.println("\n-----------------------------------------------------\n");
+        System.out.println("************ Save Team ****************");
+        Team realDeMadrid = dataRetriever.findTeamById(1);
+        Player vini = new Player(6, "Vini", 25, PlayerPositionEnum.STR, 5,null);
+        Player pedri = new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null,null);
+        realDeMadrid.getPlayers().add(vini);
+        realDeMadrid.getPlayers().add(pedri);
+        Team savedTeam = dataRetriever.saveTeam(realDeMadrid);
+        System.out.println("Team saved: " + savedTeam.getName() + " :" + savedTeam.getPlayers());
+
     }
 }

@@ -10,11 +10,12 @@ import java.util.List;
 public class DataRetriever {
     DBConnection dbConnection = new DBConnection();
 
+    //
     public Team findTeamById(Integer id) throws SQLException {
         Team team = null;
         List<Player> players = new ArrayList<>();
         String findTeamByIdQuery = """
-                select team.id as team_id, team.name as team_name, team.continent as continent , player.id as player_id, player.name as player_name,player.age as age,player.position as position from team
+                select team.id as team_id, team.name as team_name, team.continent as continent , player.id as player_id, player.name as player_name,player.age as age,player.position as position ,player.goal_nb as goal_nb from team
                 left join player on team.id = player.id_team
                 where team.id = ?""";
 
@@ -29,14 +30,25 @@ public class DataRetriever {
                     team.setName(resultSet.getString("team_name"));
                     team.setContinent(ContinentEnum.valueOf(resultSet.getString("continent")));
 
+
                     team.setPlayers(players);
                 }
                 if (resultSet.getInt("player_id") != 0) {
+
                     Player player = new Player();
                     player.setId(resultSet.getInt("player_id"));
                     player.setName(resultSet.getString("player_name"));
                     player.setAge(resultSet.getInt("age"));
                     player.setPosition(PlayerPositionEnum.valueOf(resultSet.getString("position")));
+
+                    Integer goalNb = resultSet.getInt("goal_nb");
+                    if (resultSet.wasNull()) {
+                        throw new RuntimeException(
+                                "Impossible to calculate team goals: one player's number of goals is unknown."
+                        );
+                    }
+
+                    player.setGoalNb(goalNb);
                     players.add(player);
                 }
             }
@@ -49,7 +61,7 @@ public class DataRetriever {
         List<Player> players = new ArrayList<>();
         int offset = (page - 1) * size;
         String findPlayerQuery = """
-                select player.id as player_id, player.name as player_name, player.age as age , player.position as position , team.name as team , team.continent as continent\s
+                select player.id as player_id, player.name as player_name, player.age as age , player.position as position,player.goal_nb as goal_nb , team.name as team , team.continent as continent\s
                 from player left join team on player.id_team = team.id
                 limit ? offset ?
                 """;
@@ -66,6 +78,7 @@ public class DataRetriever {
                     player.setName(resultSet.getString("player_name"));
                     player.setAge(resultSet.getInt("age"));
                     player.setPosition(PlayerPositionEnum.valueOf(resultSet.getString("position")));
+                    player.setGoalNb(resultSet.getInt("goal_nb"));
                     players.add(player);
                 }
             }
@@ -81,8 +94,8 @@ public class DataRetriever {
         }
 
         String insertPlayer = """
-        insert into player(id, name, age, position, id_team)
-        values (?, ?, ?, ?::enum_position, ?)
+        insert into player(id, name, age, position,goal_nb, id_team)
+        values (?, ?, ?, ?::enum_position,?, ?)
     """;
 
         String checkNameQuery = "select id from player where lower(name) = lower(?)";
@@ -126,6 +139,7 @@ public class DataRetriever {
                     insertStatement.setString(2, player.getName());
                     insertStatement.setInt(3, player.getAge());
                     insertStatement.setString(4, player.getPosition().name());
+                    insertStatement.setInt(5, player.getGoalNb());
                     insertStatement.setObject(5, null);
 
                     insertStatement.executeUpdate();
@@ -141,11 +155,12 @@ public class DataRetriever {
         return newPlayers;
     }
 
+    //Utilisation on confilct
     public Team saveTeam(Team teamToSave) throws SQLException {
 
         String isTeamByIdQuery = "select id from team where id = ?";
         String isTeamByNameQuery = "select id from team where name = ? and id <> ?";
-        String insertTeamQuery = "insert into team (id, name, continent) values (?, ?, ?::enum_continent)";
+        String insertTeamQuery = "insert into team (id, name, continent,goal_nb) values (?, ?, ?::enum_continent,?)";
         String updateTeamQuery = "update team set name = ?, continent = ?::enum_continent where id = ?";
         String deletePlayersFromTeamQuery = "update player set id_team = null where id_team = ?";
         String addPlayerToTeamQuery = "update player set id_team = ? where id = ?";
@@ -251,7 +266,7 @@ public class DataRetriever {
     ) throws SQLException {
         List<Player> players = new ArrayList<>();
         StringBuilder sql = new StringBuilder("""
-                select player.id as player_id, player.name as player_name, player.age as age, player.position as position,
+                select player.id as player_id, player.name as player_name, player.age as age, player.position as position, player.goal_nb as goal_nb,
                 team.name as team from  player left join team on player.id_team = team.id
                 where 1 = 1
                """);
@@ -293,6 +308,7 @@ public class DataRetriever {
                     player.setName(resultSet.getString("player_name"));
                     player.setAge(resultSet.getInt("age"));
                     player.setPosition(PlayerPositionEnum.valueOf(resultSet.getString("position")));
+                    player.setGoalNb(resultSet.getInt("goal_nb"));
                     players.add(player);
 
             }

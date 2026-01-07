@@ -8,20 +8,23 @@ public class Player {
     private String name;
     private int age;
     private  PlayerPositionEnum position;
+    private Integer goalNb;
     private Team team;
 
     public Player(){}
-    public Player(int id, String name, int age, PlayerPositionEnum position) {
+    public Player(int id, String name, int age, PlayerPositionEnum position,Integer goalNb) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.position = position;
+        this.goalNb = goalNb;
     }
-    public Player(int id, String name, int age, PlayerPositionEnum position, Team team) {
+    public Player(int id, String name, int age, PlayerPositionEnum position,Integer goalNb, Team team) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.position = position;
+        this.goalNb = goalNb;
         this.team = team;
     }
 
@@ -57,6 +60,14 @@ public class Player {
         this.position = position;
     }
 
+    public Integer getGoalNb() {
+        return goalNb;
+    }
+
+    public void setGoalNb(Integer goalNb) {
+        this.goalNb = goalNb;
+    }
+
     public Team getTeam() {
         return team;
     }
@@ -65,20 +76,16 @@ public class Player {
         this.team = team;
     }
 
-    public String getTeamName() {
-        return team.getName();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return id == player.id && age == player.age && Objects.equals(name, player.name) && position == player.position && Objects.equals(team, player.team);
+        return id == player.id && age == player.age && Objects.equals(name, player.name) && position == player.position && Objects.equals(goalNb, player.goalNb) && Objects.equals(team, player.team);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age, position, team);
+        return Objects.hash(id, name, age, position, goalNb, team);
     }
 
     @Override
@@ -88,6 +95,7 @@ public class Player {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", position=" + position +
+                ", goalNb=" + goalNb +
                 '}';
     }
 }
