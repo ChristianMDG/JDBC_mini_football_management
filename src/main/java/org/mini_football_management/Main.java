@@ -1,6 +1,5 @@
 package org.mini_football_management;
 
-import javax.swing.text.Position;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +27,19 @@ public class Main {
 //        System.out.println("\nTest f:");
 //        System.out.println(dataRetriever.findPlayersByCriteria("ud", null, null, null, 1, 10));
 
-        System.out.println("\nTest g:");
+//        System.out.println("\nTest g:");
+//
+//        List<Player> addPlayers = new ArrayList<>();
+//        addPlayers.add(new Player(6, "Jude Bellingham", 23, PlayerPositionEnum.STR, null));
+//        addPlayers.add(new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null));
+//        System.out.println(dataRetriever.createPlayers(addPlayers));
 
-        List<Player> testPlayers = new ArrayList<>();
-        testPlayers.add(new Player(6, "Jude Bellingham", 23, PlayerPositionEnum.STR, null));
-        testPlayers.add(new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null));
-        System.out.println(dataRetriever.createPlayers(testPlayers));
 
-
-//        System.out.println("\nTest h:");
-//        List<Player> newPlayers = new ArrayList<>();
-//        newPlayers.add(new Player(6, "Vini", 25, PlayerPositionEnum.STR, null));
-//        newPlayers.add(new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null));
-//        System.out.println(dataRetriever.createPlayers(newPlayers));
+        System.out.println("\nTest h:");
+        List<Player> newPlayers = new ArrayList<>();
+        newPlayers.add(new Player(6, "Vini", 25, PlayerPositionEnum.STR, null));
+        newPlayers.add(new Player(7, "Pedri", 24, PlayerPositionEnum.MIDF, null));
+        System.out.println(dataRetriever.createPlayers(newPlayers));
 
 //        System.out.println("\nTest i:");
 //        Team realDeMadrid = dataRetriever.findTeamById(1);

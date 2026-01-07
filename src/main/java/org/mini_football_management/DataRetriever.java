@@ -76,38 +76,49 @@ public class DataRetriever {
     }
 
     public List<Player> createPlayers(List<Player> newPlayers) throws SQLException {
+        if (newPlayers == null || newPlayers.isEmpty()) {
+            throw new IllegalArgumentException("La liste des joueurs est vide.");
+        }
 
         String insertPlayer = """
         insert into player(id, name, age, position, id_team)
         values (?, ?, ?, ?::enum_position, ?)
     """;
 
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement insertStatement = connection.prepareStatement(insertPlayer)) {
+        String checkNameQuery = "select id from player where lower(name) = lower(?)";
 
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement insertStatement = connection.prepareStatement(insertPlayer);
+             PreparedStatement checkNameStmt = connection.prepareStatement(checkNameQuery)) {
 
             connection.setAutoCommit(false);
 
 
             for (int i = 0; i < newPlayers.size(); i++) {
                 Player p1 = newPlayers.get(i);
-
                 for (int j = i + 1; j < newPlayers.size(); j++) {
                     Player p2 = newPlayers.get(j);
-
                     if (p1.getId() == p2.getId()) {
-                        throw new RuntimeException(
-                                "doublon d'id dans la liste : " + p1.getId()
-                        );
+                        throw new RuntimeException("Doublon d'ID dans la liste : " + p1.getId());
                     }
-
                     if (p1.getName().equalsIgnoreCase(p2.getName())) {
+                        throw new RuntimeException("Doublon de nom dans la liste : " + p1.getName());
+                    }
+                }
+            }
+
+
+            for (Player player : newPlayers) {
+                checkNameStmt.setString(1, player.getName());
+                try (ResultSet rs = checkNameStmt.executeQuery()) {
+                    if (rs.next()) {
                         throw new RuntimeException(
-                                "doublon de nom dans la liste : " + p1.getName()
+                                "Un joueur avec le nom '" + player.getName() + "' existe déjà dans la base."
                         );
                     }
                 }
             }
+
 
             try {
                 for (Player player : newPlayers) {
@@ -120,14 +131,10 @@ public class DataRetriever {
                     insertStatement.executeUpdate();
                 }
 
-
                 connection.commit();
-
             } catch (Exception e) {
                 connection.rollback();
-                throw new RuntimeException(
-                        "opération annulée", e
-                );
+                throw new RuntimeException("Opération annulée. Tous les joueurs ont été annulés.", e);
             }
         }
 
