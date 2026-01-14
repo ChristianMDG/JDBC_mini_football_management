@@ -58,18 +58,18 @@ public class Team {
         return players.size();
     }
 
-    public Integer getPlayersGoals(){
+    public int getPlayersGoals() {
+        if (players == null) {
+            return 0;
+        }
 
-            if (players== null|| players.isEmpty()) {
-                return 0;
-            }
-            int totalGoals = 0;
-
-            for (Player player : players) {
-                totalGoals += player.getGoalNb();
-            }
+        int totalGoals = 0;
+        for (Player player : players) {
+            totalGoals += (player.getGoalNb() != null ? player.getGoalNb() : 0);
+        }
         return totalGoals;
     }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
